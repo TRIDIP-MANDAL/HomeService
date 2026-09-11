@@ -19,8 +19,7 @@ public class AdtLogService {
     }
 
     // @Async what does it do ??
-    public <T> boolean createAuditLog(String tableName, String operation, Integer doneBy, Integer rowId, T prevData,
-            T newData) {
+    public <T> boolean createAuditLog(String tableName, String operation, Long doneBy, Long rowId, T prevData, T newData) {
         String prevDataJson = null;
         String newDataJson = null;
         try {

@@ -6,16 +6,13 @@ public class AuditLog {
     private Long id;
     private String tableName;
     private String operation;
-    private Integer doneBy;
-    private Integer rowId;
+    private Long doneBy;
+    private Long rowId;
     private LocalDateTime changedAt;
     private String prevData;
     private String newData;
 
-    public AuditLog() {
-    }
-
-    public AuditLog(Long id, String tableName, String operation, Integer doneBy, Integer rowId, LocalDateTime changedAt, String prevData, String newData) {
+    public AuditLog(Long id, String tableName, String operation, Long doneBy, Long rowId, LocalDateTime changedAt, String prevData, String newData) {
         this.id = id;
         this.tableName = tableName;
         this.operation = operation;
@@ -50,19 +47,19 @@ public class AuditLog {
         this.operation = operation;
     }
 
-    public Integer getDoneBy() {
+    public Long getDoneBy() {
         return doneBy;
     }
 
-    public void setDoneBy(Integer doneBy) {
+    public void setDoneBy(Long doneBy) {
         this.doneBy = doneBy;
     }
 
-    public Integer getRowId() {
+    public Long getRowId() {
         return rowId;
     }
 
-    public void setRowId(Integer rowId) {
+    public void setRowId(Long rowId) {
         this.rowId = rowId;
     }
 
@@ -89,6 +86,5 @@ public class AuditLog {
     public void setNewData(String newData) {
         this.newData = newData;
     }
-
     
 }
