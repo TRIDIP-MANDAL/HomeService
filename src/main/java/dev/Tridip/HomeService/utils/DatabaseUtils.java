@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class DatabaseUtils {
-    public static ResultSet getData(String query, String[] arr, Connection connection) throws SQLException {
+    public static ResultSet getData(String query, Object[] arr, Connection connection) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(query);
         for (int i = 0; i < arr.length; i++) {
             statement.setObject(i + 1, arr[i]);
@@ -21,4 +21,4 @@ public class DatabaseUtils {
         }
         return statement.executeUpdate() > 0;
     }
-}
+}

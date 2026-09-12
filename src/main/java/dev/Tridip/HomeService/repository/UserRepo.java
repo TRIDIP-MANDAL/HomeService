@@ -1,16 +1,19 @@
 package dev.Tridip.HomeService.repository;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.sql.DataSource;
 import org.springframework.stereotype.Repository;
-import java.sql.PreparedStatement;
+
 import java.sql.SQLException;
 
+import dev.Tridip.HomeService.dto.user.UserRequestDto;
 import dev.Tridip.HomeService.model.User;
 import dev.Tridip.HomeService.mapper.UserMapper;
+import dev.Tridip.HomeService.utils.DatabaseUtils;
 
 // take raw data from user model and send it to service layer.
 
@@ -27,19 +30,10 @@ public class UserRepo {
 
     public void create(User user) {
         String query = "INSERT INTO users (name, username, password, email, phone_number, role, address, is_active) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        try (
-            Connection connection = dataSource.getConnection();
-            PreparedStatement statement = connection.prepareStatement(query)
-        ) {
-            statement.setString(1, user.getName());
-            statement.setString(2, user.getUsername());
-            statement.setString(3, user.getPassword());
-            statement.setString(4, user.getEmail());
-            statement.setString(5, user.getPhoneNumber());
-            statement.setString(6, user.getRole());
-            statement.setString(7, user.getAddress());
-            statement.setBoolean(8, user.getIsActive());
-            statement.execute();
+        try (Connection connection = dataSource.getConnection()) {
+            
+            Object []arr = UserMapper.createMapper(user);
+            DatabaseUtils.saveData(query, arr, connection);
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to create user", e);
@@ -48,9 +42,10 @@ public class UserRepo {
 
     public User findByMail(String email) {
         String query = "SELECT * FROM users WHERE email = ?";
-        try (
-                Connection connection = dataSource.getConnection()) {
-            List<User> users = UserMapper.getMappedData(query, dataSource, new String[] { email }, connection);
+        try (Connection connection = dataSource.getConnection()) {
+
+            ResultSet rs = DatabaseUtils.getData(query, new Object[] { email }, connection);
+            List<User> users = UserMapper.getMappedData(rs);
             return users.size() > 0 ? users.get(0) : null;
         } catch (Exception e) {
             e.printStackTrace();
@@ -58,23 +53,46 @@ public class UserRepo {
         }
     }
 
+    public User findById(Long id){
+        String query = "SELECT * FROM users WHERE id = ?";
+        try (Connection connection = dataSource.getConnection()) {
 
+            ResultSet rs = DatabaseUtils.getData(query, new Object[] { id }, connection);
+            List<User> users = UserMapper.getMappedData(rs);
+            return users.size() > 0 ? users.get(0) : null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error during find user with id", e);
+        }
+    }
     public List<User> getAllUsers() {
         String query = "SELECT * FROM users";
-        try (
-                Connection connection = dataSource.getConnection();) {
-            return UserMapper.getMappedData(query, dataSource, new String[] {}, connection);
+        try (Connection connection = dataSource.getConnection();) {
+            ResultSet rs = DatabaseUtils.getData(query, new Object[] {}, connection);
+            return UserMapper.getMappedData(rs);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return new ArrayList<>();
     }
 
-    public void update(){
+    public User update(Long id, UserRequestDto req) {
+        String query = "UPDATE users SET name=?, username=?, phone_number=?, address=? WHERE id=?";
+        try (Connection connection = dataSource.getConnection()) {
 
+            Object [] arr = UserMapper.updateMapper(req, id);
+            Boolean success = DatabaseUtils.saveData(query, arr, connection);
+            if(success){
+                return this.findById(id);
+            }
+            return null;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to update user", e);
+        }
     }
 
-    public  void delete(){
-        
+    public void delete(Long id) {
+      // reset the user data to annonyomous
     }
 }
