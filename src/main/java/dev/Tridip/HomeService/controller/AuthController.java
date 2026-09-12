@@ -55,9 +55,9 @@ public class AuthController {
     }
     
     @GetMapping("/logout")
-    public ResponseEntity<ApiRespDto<String>> logout(){
+    public ResponseEntity<ApiRespDto<String>> logout() {
         ResponseCookie cookie = jwt.clearCookie();
-        
+
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())

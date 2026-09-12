@@ -10,8 +10,10 @@ import dev.Tridip.HomeService.model.User;
 @Service
 public class AuthService {
     private final UserRepo userRepo;
-    public AuthService(UserRepo userRepo){
+    private final AdtLogService adt_log_srvc;
+    public AuthService(UserRepo userRepo, AdtLogService adt_log_srvc){
         this.userRepo = userRepo;
+        this.adt_log_srvc = adt_log_srvc;
     }
     public Boolean signUp(SignUpReqDto req){
        User user = userRepo.findByMail(req.getEmail());
@@ -33,6 +35,7 @@ public class AuthService {
        );
        System.out.println(newUser.toString());
        userRepo.create(newUser);
+       adt_log_srvc.createAuditLog("users", "CREATE", newUser.getId(), newUser.getId(), null, newUser);
        return true;
     }
 
