@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import dev.Tridip.HomeService.utils.JwtUtils;
+import org.springframework.lang.NonNull;
 import dev.Tridip.HomeService.dto.response.ApiRespDto;
 
 @Component
@@ -16,7 +17,7 @@ public class StopReAuth implements HandlerInterceptor{
         this.jwt = jwt;
     }
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(@NonNull HttpServletRequest request,@NonNull HttpServletResponse response, @NonNull Object handler) throws Exception {
         System.out.println("Before request come "+ request.getRequestURI());
 
         String token = jwt.getJwtTokenFromCookie(request.getCookies());
