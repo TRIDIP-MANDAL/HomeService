@@ -83,6 +83,15 @@ public class JwtUtils {
         return false;
     }
 
+    public Long getUserIdFromToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(key())
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("id", Long.class);
+    }
+
     public ResponseCookie clearCookie() {
         return ResponseCookie.from(cookieName, "")
                 .path(opeatingPathOfToken)

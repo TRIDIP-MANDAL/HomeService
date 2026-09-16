@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import dev.Tridip.HomeService.dto.user.UserRequestDto;
 import dev.Tridip.HomeService.dto.user.UserResponseDto;
+import dev.Tridip.HomeService.mapper.UserMapper;
 import dev.Tridip.HomeService.model.User;
 import dev.Tridip.HomeService.repository.UserRepo;
 
@@ -23,27 +24,20 @@ public class UserService {
         if (user == null) {
             return null;
         }
-        // Map User model -> UserResponseDto (never expose password)
-        return new UserResponseDto(
-                user.getId(),
-                user.getName(),
-                user.getUsername(),
-                user.getEmail(),
-                user.getPhoneNumber(),
-                user.getRole(),
-                user.getAddress(),
-                user.getCreatedAt(),
-                user.getIsActive());
+        return UserMapper.mapUserToResponseDto(user);
     }
 
-    public Boolean updateProfile(Long id, UserRequestDto req) {
+    public Boolean updateProfile(Long id, UserRequestDto req, Long currentUserId) {
+        if (!userRepo.isOwner(id, currentUserId)) {
+            return null;
+        }
         User old_user = userRepo.findById(id);
-        if(old_user==null){
+        if (old_user == null) {
             return false;
         }
         User new_user = userRepo.update(id, req);
-        if(new_user == null) throw new RuntimeException("Failed to update user profile");
-        adt_log_srvc.createAuditLog("users", "UPDATE", id, id, old_user, new_user);
+        if (new_user == null) throw new RuntimeException("Failed to update user profile");
+        adt_log_srvc.createAuditLog("users", "UPDATE", currentUserId, id, old_user, new_user);
         return true;
     }
 }

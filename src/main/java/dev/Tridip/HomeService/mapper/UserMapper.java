@@ -6,21 +6,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dev.Tridip.HomeService.dto.user.UserRequestDto;
+import dev.Tridip.HomeService.dto.user.UserResponseDto;
 import dev.Tridip.HomeService.model.User;
 
 public class UserMapper {
-  public static Object[] createMapper(User user){
+  public static Object[] createMapper(User user) {
     return new Object[] {
-                    user.getName(),
-                    user.getUsername(),
-                    user.getPassword(),
-                    user.getEmail(),
-                    user.getPhoneNumber(),
-                    user.getRole(),
-                    user.getAddress(),
-                    user.getIsActive()
-            };
+        user.getName(),
+        user.getUsername(),
+        user.getPassword(),
+        user.getEmail(),
+        user.getPhoneNumber(),
+        user.getRole(),
+        user.getAddress(),
+        user.getIsActive()
+    };
   }
+
   public static List<User> getMappedData(ResultSet rs) throws SQLException {
     List<User> list = new ArrayList<>();
     while (rs.next()) {
@@ -48,5 +50,18 @@ public class UserMapper {
         user.getAddress(),
         id
     };
+  }
+
+  public static UserResponseDto mapUserToResponseDto(User user) {
+    return new UserResponseDto(
+        user.getId(),
+        user.getName(),
+        user.getUsername(),
+        user.getEmail(),
+        user.getPhoneNumber(),
+        user.getRole(),
+        user.getAddress(),
+        user.getCreatedAt(),
+        user.getIsActive());
   }
 }

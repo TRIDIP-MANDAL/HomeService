@@ -21,4 +21,19 @@ public class DatabaseUtils {
         }
         return statement.executeUpdate() > 0;
     }
+
+    public static Long saveAndReturnKey(String query, Object[] arr, Connection connection) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
+        for (int i = 0; i < arr.length; i++) {
+            statement.setObject(i + 1, arr[i]);
+        }
+        int rows = statement.executeUpdate();
+        if (rows == 0) throw new SQLException("Insert failed, no rows affected");
+        try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+            if (generatedKeys.next()) {
+                return generatedKeys.getLong(1);
+            }
+            throw new SQLException("Insert failed, no generated key returned");
+        }
+    }
 }

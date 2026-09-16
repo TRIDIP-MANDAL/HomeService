@@ -92,6 +92,18 @@ public class UserRepo {
         }
     }
 
+
+    public boolean isOwner(Long targetUserId, Long currentUserId) {
+        String query = "SELECT id FROM users WHERE id = ? AND id = ?";
+        try (Connection connection = dataSource.getConnection()) {
+            ResultSet rs = DatabaseUtils.getData(query, new Object[] { targetUserId, currentUserId }, connection);
+            return rs.next();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to check user ownership", e);
+        }
+    }
+
     public void delete(Long id) {
       // reset the user data to annonyomous
     }
