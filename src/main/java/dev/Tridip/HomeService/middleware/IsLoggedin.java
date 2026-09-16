@@ -29,8 +29,7 @@ public class IsLoggedin implements HandlerInterceptor{
          if(token != null && jwt.validateToken(token)){
             return true;
          }
-         // If not logged in, return custom JSON response
-         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 status code
+         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
          response.setContentType("application/json");
          
          ApiRespDto<String> errorResponse = new ApiRespDto<>(false, "Unauthorized! Please log in first.", null);
@@ -49,7 +48,7 @@ public class IsLoggedin implements HandlerInterceptor{
     }
 
     @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler,
+    public void afterCompletion(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler,
             @Nullable Exception ex) throws Exception {
              System.err.println("Req, res completion ");
                 // HandlerInterceptor.super.afterCompletion(request, response, handler, ex);

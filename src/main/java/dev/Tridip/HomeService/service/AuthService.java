@@ -20,7 +20,7 @@ public class AuthService {
        if(user!=null){
         return false;
        }
-       System.out.println(user.toString());
+       
        User newUser = new User(
         null,
         req.getName(),

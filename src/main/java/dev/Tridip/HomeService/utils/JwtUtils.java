@@ -10,7 +10,7 @@ import io.jsonwebtoken.security.Keys;
 import java.security.Key;
 import jakarta.servlet.http.Cookie;
 import dev.Tridip.HomeService.dto.auth.LoginResDto;
-
+import org.springframework.lang.Nullable;
 
 
 @Component
@@ -54,6 +54,7 @@ public class JwtUtils {
                 .build(); // finalize the creation of cookie with all the given data
     }
 
+    @Nullable
     public String getJwtTokenFromCookie(Cookie []cookies) {
            if( cookies != null && cookies.length > 0){
             for(Cookie cookie: cookies){
