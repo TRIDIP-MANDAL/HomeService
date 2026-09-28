@@ -9,12 +9,21 @@ import dev.Tridip.HomeService.dto.response.ApiRespDto;
 
 @ControllerAdvice // to receive all the exception
 public class GlobalExceptionhandler {
-    
-    // @ExceptionHandler(Exception.class)
+
+    @ExceptionHandler(SecurityException.class)
+    public ResponseEntity<ApiRespDto<String>> handleSecurityException(SecurityException ex) {
+        return new ResponseEntity<>(new ApiRespDto<>(false, ex.getMessage(), null), HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiRespDto<String>> handleIllegalArgumentException(IllegalArgumentException ex) {
+        return new ResponseEntity<>(new ApiRespDto<>(false, ex.getMessage(), null), HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler
-    public ResponseEntity<ApiRespDto<String>> handleException(Exception ex){
+    public ResponseEntity<ApiRespDto<String>> handleException(Exception ex) {
         System.out.println(ex.toString());
-        return new ResponseEntity<>(new ApiRespDto<String>(false, "INternal Server Error", null),HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(new ApiRespDto<String>(false, "INternal Server Error", null), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }
